@@ -1,0 +1,429 @@
+---
+title: "PSCI 2075: Group Assignment 1"
+subtitle: "Due Thursday, October 1 at 11:59pm"
+author: "YOUR NAME; GROUP MEMBER NAMES (list everyone in your group)"
+format:
+  pdf:
+    code-overflow: wrap
+    include-in-header:
+      text: |
+        \usepackage{fvextra}
+        \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+        \DefineVerbatimEnvironment{verbatim}{Verbatim}{breaklines}
+engine: knitr
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+## Instructions
+
+- You can work in groups of 2-3 or individually for this assignment.
+  **All group members have to be in the same recitation** as you'll be
+  working on this during that time. Every group member should understand
+  and be able to explain every answer.
+- **Section 6 must be completed individually, without discussing your
+  answer with your groupmates first.** Each group member will have a
+  different answer here.
+- Once finished, **each group member renders and submits their own
+  copy** of this document to Canvas, with all group members' names
+  listed at the top.
+- Submit your **rendered `.pdf` file**, not this `.qmd` source file.
+- Questions are tagged with how you may use AI:
+  - **\[AI PERMITTED\]:** AI use is allowed for these questions.
+  - **\[AI LIMITED\]:** first prompt your AI with: *"You are a tutoring
+    AI helping students work through R code and statistics. For the rest
+    of this conversation, ask me leading questions rather than giving me
+    the answer directly — help me work through the problem myself."*
+  - **\[AI RESTRICTED\]:** No AI use allowed for these questions.
+- If you use AI for this assignment, explain what you used it for in
+  Section 6.
+- All the datasets you need (`states`, `world`, `nes`) are built into
+  the `RCPA3` package.
+- **Grading:** the assignment is worth 25 points. Each sub-question's
+  point value is shown next to it, and each is scored as full credit,
+  half credit (right idea but some real problem such as a missing
+  element, code that does the wrong thing, or an interpretation that
+  doesn't engage with the question), or no credit.
+- **Keep individual lines of code reasonably short.** A single long line
+  (e.g., one `boxplot()` or `prop.table()` call with several named
+  arguments all on one line) can run off the edge of the page once
+  rendered to PDF instead of wrapping. If a line is getting long, break
+  it across multiple lines instead.
+- **Render before you submit and check that no code/output is cut off.**
+
+```{r setup}
+#| echo: false
+#| message: false
+#| warning: false
+library(RCPA3)
+library(tidyverse)
+```
+
+------------------------------------------------------------------------
+
+## Section 1: Data Familiarity (4 points)
+
+This section builds familiarity with the data you'll use throughout this
+course.
+
+**1.1** *(1 point)* Pick one **interval/continuous**
+"abortion.ratevariable from the `states`, `nes` or `world` dataset (not
+one already used as a worked example in lecture). What does it measure,
+what are its units and range, and does it have any missing values? (You
+can check with `summary()`, or read the dataset's codebook with
+`?states`, `?nes`, or `?world`.) Then pick a **binary or
+categorical**"abort.laws" variable from the same dataset that you'll use
+to group it in 1.2, and state that variable's level of measurement
+(binary, nominal/categorical, or ordinal). *\[AI RESTRICTED\]*
+
+```{r q1-1}
+summary(states$abortion.rate)
+#measures number of abortions per cap
+summary(states$abortlaws.3cat)
+```
+
+**Your answer:**
+
+**1.2** *(1.5 points)* Calculate the mean and standard deviation of your
+continuous variable from 1.1 within each group of your grouping variable
+from 1.1. Why did you pick this grouping variable, and what does the
+result tell you? *\[AI PERMITTED\]*
+
+```{r q1-2}
+# Q1.2 -- your code goes here
+mean(states$abortion.rate)
+sd(states$abortion.rate)
+```
+
+**Your answer:**
+
+**1.3** *(1.5 points)* Visualize your Question 1.1 variable by group,
+using whatever plot type you think fits best. Why did you choose that
+type of plot? *\[AI PERMITTED\]*
+
+```{r q1-3}
+# Q1.3 -- your code goes here
+hist(states$abortion.rate)
+plot(states$abortlaws.3cat)
+```
+
+**Your answer:**
+
+--- they are the two different kinds that best show the data
+
+## Section 2: Summary Statistics, By Hand, in R (4 points)
+
+This section is done **in R, but as a calculator, not a statistics
+package.** You may store the numbers in a vector with `c()` and use
+arithmetic operators (`+ - * / ^`), `sqrt()`, `sum()`, `length()`, and
+`sort()` — but not `mean()`, `median()`, `sd()`, `var()`, `range()`,
+`summary()`, or any other built-in function that computes a statistic
+for you. The point is to type out each formula step by step, the same
+way you'd work it out on paper, so **show your work**: the arithmetic
+itself (differences from the mean, squaring, dividing by $n-1$) has to
+be visible in your code. A chunk that just prints a final number isn't
+showing work.
+
+**2.1** *(2 points)* For each group of numbers below, calculate the
+**mean, median, range (maximum minus minimum), and standard deviation**
+(the *sample* standard deviation from lecture, which divides by $n-1$),
+following the rules above:
+
+- Group A: 2, 4, 6, 8, 10, 12, 14
+- Group B: 2, 6, 8, 8, 8, 10, 14
+- Group C: 2, 3, 3, 4, 4, 5, 20
+
+*\[AI RESTRICTED\]*
+
+```{r q2-1}
+# Q2.1 -- Group A -- your code goes here
+A <- c(2, 4, 6, 8, 10, 12, 14)
+mean(A)
+median(A)
+max(A) - min(A)
+sd(A)
+# Q2.1 -- Group B -- your code goes here
+B <- c(2, 6, 8, 8, 8, 10, 14)
+mean(B)
+median(B)
+max(B) - min(B)
+sd(B)
+
+
+# Q2.1 -- Group C -- your code goes here
+C <- c(2, 3, 3, 4, 4, 5, 20)
+mean(C)
+median(C)
+max(C) - min(C)
+sd(C)
+```
+
+**2.2** *(1 point)* Groups A and B have the same mean, median, and
+range. What differs between them, and what does that difference tell you
+about what a standard deviation actually captures that the other three
+statistics don't? *\[AI RESTRICTED, nocode\]*
+
+#group B has more values closer to the mean compared to A
+
+**2.3** *(1 point)* Compare the mean and median for Group C. What does
+the relationship between them tell you about the shape of that
+distribution? *\[AI RESTRICTED, nocode\]*
+
+# it shows that there is a skew and most likely a outlier given the number you get out of it
+
+------------------------------------------------------------------------
+
+## Section 3: Transforming Variables (6 points)
+
+**3.1** *(1 point)* Using the `world` dataset, summarize `gdp.percap`
+and create a histogram. What do you notice about the shape of this
+variable? *\[AI PERMITTED\]*
+
+```{r q3-1}
+# Q3.1 -- your code goes here
+hist(world$gdp.percap,
+     main = "Distribution of GDP per Capita",
+     xlab = "GDP per Capita",
+     col = "blue",
+     border = "white")
+```
+
+#it is very skewed and not very clear on what is really happening
+
+**3.2** *(1 point)* Create a new variable that's the natural log of
+`gdp.percap`, and redo the histogram from 3.1 using this new variable
+instead. What did taking the log actually do to the distribution? Would
+taking the log of a variable that *isn't* skewed be a good idea? Why or
+why not? *\[AI PERMITTED\]*
+
+```{r q3-2}
+# Q3.2 -- your code goes here
+world$log.gdp.percap <- log(world$gdp.percap)
+hist(world$log.gdp.percap,
+     main = "Distribution of GDP per Capita",
+     xlab = "GDP per Capita",
+     col = "red",
+     border = "white")
+```
+
+#it makes having all of the outlier countries be closer to each other.
+taking a non skewed varible isnt a good idea beacuse the information is
+already close to its self so you would just be making the numbers
+smaller.
+
+**3.3** *(1 point)* Pick a different continuous variable from `states`,
+`nes` or `world` and create a **dummy (0/1) variable** from it using a
+threshold you choose (e.g., "above vs. at-or-below the median," or a
+substantively meaningful cutoff you can justify). Report what percentage
+of cases fall into each group. (If your variable has missing values,
+remember that both the threshold calculation and the final percentage
+need `na.rm = TRUE`, and say how many cases are missing.) *\[AI
+PERMITTED\]*
+
+```{r q3-3}
+# Q3.3 -- your code goes here
+summary(states$abortion.rate)
+cutoff <- median(states$abortion.rate, na.rm = TRUE)
+cutoff
+states$high.abortion.rate <- ifelse(states$abortion.rate > cutoff, 1, 0)
+mean(states$high.abortion.rate == 0, na.rm = TRUE) * 100
+mean(states$high.abortion.rate == 1, na.rm = TRUE) * 100
+sum(is.na(states$abortion.rate))
+```
+
+**Your answer:**
+
+**3.4** *(1 point)* Recode a continuous variable of your choice into
+**three ordinal categories** you define yourself (e.g.,
+Low/Medium/High), using `cut()` or `case_when()`. Justify your cutoffs
+in a sentence, then use `table()` to confirm your new variable's counts
+add up to the number of non-missing cases in the original variable.
+(`table()` drops `NA`s by default; use `table(x, useNA = "ifany")` to
+see them.) *\[AI PERMITTED\]*
+
+```{r q3-4}
+# Q3.4 -- your code goes here
+states$abortlaws_category <- cut(
+  states$abortlaws,
+  breaks = c(0, 4, 10, Inf),
+  labels = c("Low", "Medium", "High"),
+  include.lowest = TRUE,
+  ordered_result = TRUE
+)
+
+counts <- table(states$abortlaws_category)
+counts
+
+
+sum(counts)
+sum(!is.na(states$abortlaws))
+sum(counts) == sum(!is.na(states$abortlaws))
+
+
+table(states$abortlaws_category, useNA = "ifany")
+```
+
+**Your answer:**
+
+**3.5** *(1 point)* Pick a categorical variable from `states`, `nes` or
+`world` with **four or more categories** and collapse it into **two**
+categories of your own choosing. Then subset your dataset down to just
+the cases in *one* of your two new categories, and report how many cases
+that subset contains. (Use `filter()`, or if you use base R's `[ ]`,
+wrap the condition in `which()` — otherwise any `NA`s in your variable
+turn into junk rows and inflate the count.) *\[AI PERMITTED\]*
+
+```{r q3-5}
+# Q3.5 -- your code goes here
+view(nes$agree.facts)
+nes$agree.facts2 <- NA_character_
+
+nes$agree.facts2[which(nes$agree.facts %in%
+  c("1. Not important at all", "2. A little important"))] <- "Low importance"
+
+nes$agree.facts2[which(nes$agree.facts %in%
+  c("4. Very important", "5. Extremely important"))] <- "High importance"
+
+high_importance <- nes[which(nes$agree.facts2 == "High importance"), ]
+
+low_importance <- nes[which(nes$agree.facts2 == "Low importance"), ]
+
+nrow(high_importance)
+nrow(low_importance)
+
+
+```
+
+**3.6** *(1 point)* The code below is supposed to calculate the mean of
+`gdp.percap` by region, sorted from highest to lowest, but it's broken.
+Diagnose the problem — what's actually wrong with it, and how would you
+fix it? You don't need to fix it in your own code chunk, just explain
+what's wrong. *\[AI LIMITED\]*
+
+```{r q3-6}
+#| eval: false
+world %>%
+  group_by(region) %>%
+  summarize(mean(gdp.percap, na.rm = TRUE))%>%
+  arrange(desc),
+
+```
+
+# you need to put a %\>% after summarize also need to make mean into mean_gdp
+
+# = gdp.percap then after desk you need to put after desk (mean_gdp)
+
+------------------------------------------------------------------------
+
+## Section 4: Comparisons (6 points)
+
+This section is about the **logic of comparison**, meaning dividing
+cases into groups of an independent variable (IV) and comparing them for
+a dependent variable (DV).
+
+**4.1** *(1 point)* Pick a continuous variable (your DV) and one binary
+or categorical variable with no more than four groups (your IV) from
+`states`, `nes` or `world`. Do not use variables previously used in
+Sections 1–3. State a one-sentence hypothesis: do you expect the DV to
+differ across groups of the IV, and if so, in which direction? *\[AI
+RESTRICTED, nocode\]*
+
+# world and i will use world$life.expectancy and i will use world$pol.terror.scale.ai, i execpect the countries with less oppresion rates will have a higher oprasion rate
+
+**4.2** *(2 points)* Create a boxplot comparing your DV across groups of
+your IV, and calculate the DV's mean within each group. Does the pattern
+support your hypothesis from 4.1? *\[AI PERMITTED\]*
+
+```{r q4-2}
+# Q4.2 -- your code goes here
+boxplot(life.expectancy ~ pol.terror.scale.ai,
+        data = world,
+        main = "Life Expectancy by Political Terror Scale",
+        xlab = "Political Terror Scale",
+        ylab = "Life Expectancy (Years)",
+        col = "blue")
+```
+
+**Your answer:**
+
+**4.3** *(1 point)* Pick one categorical DV (more than two categories)
+and one binary or categorical IV (again, different from anything used
+above). State a one-sentence hypothesis: how do you expect the DV's
+distribution to differ across groups of the IV? *\[AI RESTRICTED,
+nocode\]*
+
+#world$right.speech and world$life.expectancy i think that countries with a more lenient freedom of speech policy have a higher life expectency.
+
+**4.4** *(2 points)* Create a crosstab of your two variables from 4.3,
+with the **IV on the columns** and the **DV on the rows**, and obtain
+**column percentages** (not row percentages or raw counts) — in R, this
+means `round(100 * prop.table(table(dv, iv), margin = 2), 1)`. Moving
+across the columns from left to right, do the percentages change the way
+your hypothesis predicted? *\[AI PERMITTED\]*
+
+```{r q4-4}
+# Q4.4 -- your code goes here
+round(
+  100 * prop.table(
+    table(world$life.expectancy, world$rights.speech),
+    margin = 2
+  ),
+  1
+)
+
+
+```
+
+# yes it does line up the countries with higher life expectancy on avg have a more protected freedom of speech
+
+------------------------------------------------------------------------
+
+## Section 5: Mini Explainer (3 points)
+
+Political science writing doesn't always come as a numbered list of
+questions but a lot of it looks like a short news explainer that uses a
+real number to back up a real claim (think a brief Economist write-up)
+
+**5.1** *(3 points)* Write a **150–250 word** explanatory paragraph that
+uses *one* of the analyses your group already produced above (from
+Section 1 or Section 4) to make a claim about your topic. Your paragraph
+must include:
+
+- A one-sentence thesis: the specific claim you're making
+- At least one real number from your own analysis above (a mean, a
+  standard deviation, a percentage cited in the way a news article
+  would, in plain language, not as raw R output)
+- A reference to at least one outside source (a news article, government
+  report, or academic source) that gives context for why this topic
+  matters
+- A one-sentence conclusion or takeaway
+
+*\[AI RESTRICTED, nocode\]*
+
+**Your answer:**
+
+------------------------------------------------------------------------
+
+## Section 6: Individual Question (2 points) — Complete This Section Alone
+
+**Do not discuss your answer to this question with your groupmates
+before writing it.** Everyone in the group will answer this
+individually, and answers are expected to differ.
+
+**6.1** *(2 points)* Pick *one* of the analyses your group conducted in
+Section 1 or Section 4. If a skeptic wanted to poke holes in it, what
+would they say? Consider things like: is the comparison actually fair?
+Could a confounding variable explain the pattern instead of what you
+concluded? Is there anything about the data (missing values, how the
+variable is coded, which cases are included) that should make you less
+confident in the result? Write this in your own words. This section is
+specifically meant to reflect *your own* thinking, not your group's
+discussion. *\[AI RESTRICTED, nocode\]*
+
+**Your answer:**
+
+**6.2** *(required if applicable, not separately scored)* *If AI was
+used:* Briefly note what you used AI for and how you used it.
+
+**Your answer:**
